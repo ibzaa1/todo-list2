@@ -3,13 +3,21 @@
     <input type="text" class="todo-input" placeholder="Write your todos" v-model="newTodo" @keyup.enter="addTodo">
     <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item">
         <div class="todo-item-overlap">
-            <div v-if="!todo.editting" @dblclick="editTodo(todo)" class="todo-item-label">{{ todo.title }}</div>
+            <input type="checkbox" v-model="todo.completed">
+            <div v-if="!todo.editting" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
             <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" v-focus @keyup.esc="cancelEdit(todo)">
         </div>
         <div class="remove-item" @click="removeTodo(index)">
             &times;
         </div>
     </div>
+
+    <div class="extra-container">
+    <div><label><input type="checkbox"> Check All</label></div>
+    <div>{{ remaining }} items left</div>
+    </div>
+
+
  </div>
 </template>
 
@@ -37,6 +45,11 @@ export default {
       ]
     }
   },
+  computed: {
+    remaining() {
+        return this.todos.filter(todo => !todo.completed).length
+    }
+  },    
   directives: {
     focus: {
       inserted: function (el) {
@@ -123,5 +136,26 @@ export default {
     padding: 10px;
     border: 1px solid #ccc;
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: grey;
+}
+
+.extra-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    border-top: 1px solid lightgrey;
+    padding-top: 14px;
+    margin-bottom: 14px;
+}
+
+  button {
+    font-size: 14px;
+    background-color: white;
+    appearance: none;
 }
 </style>
