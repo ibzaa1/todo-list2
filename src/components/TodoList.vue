@@ -1,6 +1,7 @@
 <template>
  <div>
     <input type="text" class="todo-input" placeholder="Add todos" v-model="newTodo" @keyup.enter="addTodo">
+    <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
     <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
         <div class="todo-item-overlap">
             <input type="checkbox" v-model="todo.completed">
@@ -11,6 +12,7 @@
             &times;
         </div>
     </div>
+    </transition-group>
 
     <div class="extra-container">
     <div><label><input type="checkbox" :checked="!anyRemaining" @change="checkAll"> Check All</label></div>
@@ -26,7 +28,7 @@
 
         <div>
             <transition name="fade">
-            <button v-if="showClearCompleted" @click="clearCompleted">Clear Completed</button>
+            <button class="clear" v-if="showClearCompleted" @click="clearCompleted">Clear Completed</button>
             </transition>
         </div>
     </div>
@@ -118,10 +120,10 @@ export default {
             this.todos.splice(index, 1)
         },
         checkAll() {
-            this.todos.forEach((todo) => todo.completed = event.target.checked)
+          this.todos.forEach((todo) => todo.completed = event.target.checked)
         },
         clearCompleted() {
-            this.todos = this.todos.filter(todo => !todo.completed)
+          this.todos = this.todos.filter(todo => !todo.completed)
         }
     }
 }
@@ -191,14 +193,29 @@ export default {
 }
 
 button {
+    border: none;
+    box-shadow: none;
     font-size: 14px;
-    background-color: white;
+    color: white;
+    background-color: #35495e;
     appearance: none;
-    border-radius: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 15px;
 }
 
-
 .active {
-    background: lightgreen;
+    background: #41b883;
+}
+
+.clear {
+  background-color: #c62a2a;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
 </style>
