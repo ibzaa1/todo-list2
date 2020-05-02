@@ -1,7 +1,7 @@
 <template>
  <div>
-    <input type="text" class="todo-input" placeholder="Write your todos" v-model="newTodo" @keyup.enter="addTodo">
-    <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item">
+    <input type="text" class="todo-input" placeholder="Add todos" v-model="newTodo" @keyup.enter="addTodo">
+    <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
         <div class="todo-item-overlap">
             <input type="checkbox" v-model="todo.completed">
             <div v-if="!todo.editting" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
@@ -17,7 +17,18 @@
     <div>{{ remaining }} items left</div>
     </div>
 
+    <div class="extra-container">
+        <div>
+        <button :class="{ active: filter == 'all' }" @click="filter = 'all'">All</button>
+        <button :class="{ active: filter == 'active' }" @click="filter = 'active'">Not Completed</button>
+        <button :class="{ active: filter == 'completed' }" @click="filter = 'completed'">Completed</button>
+        </div>
 
+        <div>
+            <button v-if="showClearCompleted" @click="clearCompleted">Clear Completed</button>
+        </div>
+    </div>
+     
  </div>
 </template>
 
@@ -29,6 +40,7 @@ export default {
       newTodo: '',
       idForTodo: 3,
       beforeEdit: '',
+      filter: 'all',
       todos: [
           {
             'id': 1,
@@ -51,6 +63,18 @@ export default {
     },
     anyRemaining() {
         return this.remaining != 0
+    },
+    todosFiltered() {
+      if (this.filter == 'all') {
+        return this.todos
+      } else if (this.filter == 'active') {
+        return this.todos.filter(todo => !todo.completed)
+      } else if (this.filter == 'completed') {
+        return this.todos.filter(todo => todo.completed)
+      }
+    },
+    showClearCompleted () {
+        return this.todos.filter(todo => todo.completed).length > 0 
     }
   },    
   directives: {
@@ -93,6 +117,9 @@ export default {
         },
         checkAll() {
             this.todos.forEach((todo) => todo.completed = event.target.checked)
+        },
+        clearCompleted() {
+            this.todos = this.todos.filter(todo => !todo.completed)
         }
     }
 }
@@ -159,9 +186,15 @@ export default {
     margin-bottom: 14px;
 }
 
-  button {
+button {
     font-size: 14px;
     background-color: white;
     appearance: none;
+    border-radius: 20px;
+}
+
+
+.active {
+    background: lightgreen;
 }
 </style>
