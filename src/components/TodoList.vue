@@ -202,6 +202,7 @@ button {
     padding: 10px;
     border-radius: 5px;
     font-size: 15px;
+    cursor: pointer;
 }
 
 .active {
