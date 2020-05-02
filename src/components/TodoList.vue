@@ -1,7 +1,6 @@
 <template>
  <div>
     <input type="text" class="todo-input" placeholder="Add todos" v-model="newTodo" @keyup.enter="addTodo">
-    <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
     <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
         <div class="todo-item-overlap">
             <input type="checkbox" v-model="todo.completed">
@@ -12,7 +11,6 @@
             &times;
         </div>
     </div>
-    </transition-group>
 
     <div class="extra-container">
     <div><label><input type="checkbox" :checked="!anyRemaining" @change="checkAll"> Check All</label></div>
@@ -202,12 +200,5 @@ button {
 
 .active {
     background: lightgreen;
-}
-
-.fade-enter-active, .fade-leave-active {
-    transition: opacity .2s;
-}
-.fade-enter, .fade-leave-to {
-    opacity: 0;
 }
 </style>
