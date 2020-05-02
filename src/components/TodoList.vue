@@ -4,7 +4,7 @@
     <div v-for="(todo, index) in todos" :key="todo.id" class="todo-item">
         <div class="todo-item-overlap">
             <div v-if="!todo.editting" @dblclick="editTodo(todo)" class="todo-item-label">{{ todo.title }}</div>
-            <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" v-focus @keyup.escape="cancelEdit(todo)">
+            <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" v-focus @keyup.esc="cancelEdit(todo)">
         </div>
         <div class="remove-item" @click="removeTodo(index)">
             &times;
@@ -20,6 +20,7 @@ export default {
     return {
       newTodo: '',
       idForTodo: 3,
+      beforeEdit: '',
       todos: [
           {
             'id': 1,
@@ -48,7 +49,6 @@ export default {
           if(this.newTodo.trim().length === 0) {
             return
           }
-
           this.todos.push({
               id: this.idForTodo,
               title: this.newTodo,
@@ -59,10 +59,18 @@ export default {
           this.idForTodo++
         },
         editTodo(todo) {
+            this.beforeEdit = todo.title
             todo.editting = true
         },
         doneEdit(todo) {
+            if(todo.title.trim().length === 0) {
+            todo.title = this.beforeEdit
+          }
             todo.editting = false
+        },
+        cancelEdit(todo) {
+            todo.editting = false,
+            todo.title = this.beforeEdit
         },
         removeTodo(index) {
             this.todos.splice(index, 1)
